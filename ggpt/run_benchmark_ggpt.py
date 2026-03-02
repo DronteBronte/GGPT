@@ -40,9 +40,9 @@ def main(cfg):
         device = 'cuda'
     output_dir = hydra.core.hydra_config.HydraConfig.get().runtime.output_dir
     logger = EvalLogger(output_dir)
-    model = instantiate(cfg.model_config).eval()
+    model = instantiate(cfg.ggptmodel_config).eval()
     ckpt = torch.load(cfg.common_config.load_ckpt, map_location='cpu')
-    ckpt = {k.replace('module.',''):v for k,v in ckpt['model'].items()}
+    ckpt = {k.replace('module.',''):v for k,v in ckpt.items()}
     model.load_state_dict(ckpt, strict=True)
     model = model.to(device)
     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[device_id], find_unused_parameters=False)

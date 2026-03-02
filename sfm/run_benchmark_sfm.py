@@ -10,7 +10,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from feedforward import FeedForward_Model
 from matching import init_match_models
-from dataloader import get_valComposedDataLoader
+from sfm.dataloader import get_valComposedDataLoader
 
 from sfm.sfm_func import run_sfm
 from evaluation import eval_points, eval_cameras, EvalLogger, eval_multiview_depths

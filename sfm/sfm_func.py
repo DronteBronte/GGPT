@@ -26,7 +26,6 @@ def run_sfm(images, ff_outputs, match_models, cfg, gt=None, output_dir=None):
         images = torch.from_numpy(np.stack([np.array(img) for img in images], axis=0)).float()/255.0  #(N,H,W,3)
         images = images.to(device)
     m_h, m_w = images.shape[1:3]
-    Print(f"Use images with the resolution of {m_w}x{m_h} for matching.")
     sx, sy = ff_w/m_w, ff_h/m_h
     mres_to_fres = torch.tensor([[sx,0,0.5*(sx-1)],[0,sy,0.5*(sy-1)],[0,0,1]], dtype=torch.float32).to(device)  #3,3
     match_results = match_images(

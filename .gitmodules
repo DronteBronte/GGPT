@@ -7,3 +7,6 @@
 [submodule "Pointcept"]
 	path = Pointcept
 	url = git@github.com:ChenYutongTHU/Pointcept.git
+[submodule "RoMa"]
+	path = RoMa
+	url = git@github.com:Parskatt/RoMa.git
