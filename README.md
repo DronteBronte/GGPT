@@ -41,11 +41,11 @@ cd GGPT
 ```
 pip install -r requirements_sfm.txt
 # Choose which matcher to use.
-# For RoMav2
-cd RoMAv2/ && pip install -e .
-# For RoMav1
+# For RoMaV2
+cd RoMaV2/ && pip install -e .
+# For RoMaV1
 pip install fused-local-corr>=0.2.2
-cd RoMA/ && pip install -e .
+cd RoMa/ && pip install -e .
 ```
 
 #### 2.3 \[Optional\] If you need to run GGPT, the 3D point transformer, please install the following packages in the same virtual environement.  You don't need to build another env for this.
