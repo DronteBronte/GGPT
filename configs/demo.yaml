@@ -1,0 +1,67 @@
+feedforward_config:
+  model: vggt-depth
+  dav3:
+    input_pose: False   
+  pi3x:
+    input_intrinsics: False
+    input_extrinsics: False
+
+match_config:
+  models: ['romav2-base']
+  max_width: 1280
+  save_vis: False
+
+ba_config:
+  score_thresh: 0.6
+  cycle_err_thresh: 2
+  mintrack_per_view: 2048
+  shared_camera: True #! To modified if needed
+  refine_focal_length: True
+  calibrated: False  
+  loss_function_type: 'cauchy'
+  loss_function_scale: 0.1
+
+
+dlt_config:
+  score_thresh: 0.4
+  cycle_err_thresh: 2
+  max_epipolar_error: 2
+  min_tri_angle: 5
+  max_reproj_error: 2
+  batch_size: 100000
+
+common_config:
+  seed: 47
+  num_workers: 0
+  save_vis: True
+  save_outputs: False
+  ggpt_ckpt: ckpts/model.step228000_cleaned.pth
+  ggpt_refine: True
+
+
+ggptmodel_config:
+  _target_: ggpt.model.base.BasePredictor
+  grid_resolution: 384 
+  type_embed_dim: 16
+  sinusoidal_dim: 32
+  zero_init: True
+  predict_residual: True
+  backbone_type: 'ptv3' #or 'spconv_unet'
+  ptv3_config:
+    enc_dim: 128
+    output_dim: 96
+    turn_off_bn: False 
+    stride: 
+      - 2
+      - 2
+      - 2
+      - 2
+    enable_flash: True
+    embedding_type: 'MLP'
+  head_width: 256
+
+
+image_dir: examples/scannetpp-9bb22982672c69bf
+hydra:
+  run: 
+    dir: outputs/demo/scannetpp-9bb22982672c69bf

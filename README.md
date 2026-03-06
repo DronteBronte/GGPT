@@ -11,17 +11,6 @@ Official PyTorch implementation of **Geometry-grounded Point Transformer (GGPT)*
 
 ---
 
-## 🚀 Pretrained Models
-
-You can download our pretrained checkpoint directly from Hugging Face: [YutongGoose/GGPT](https://huggingface.co/YutongGoose/GGPT).
-
-```bash
-# Recommended: download via huggingface-cli
-pip install -U "huggingface_hub[cli]"
-huggingface-cli download YutongGoose/GGPT model.step228000.pth --local-dir ckpts/
-```
-
----
 
 ## 🛠️ Installation
 
@@ -48,47 +37,27 @@ pip install fused-local-corr>=0.2.2
 cd RoMa/ && pip install -e .
 ```
 
-#### 2.3 \[Optional\] If you need to run GGPT, the 3D point transformer, please install the following packages in the same virtual environement.  You don't need to build another env for this.
+#### 2.3 \[Optional\] If you need to run GGPT, the 3D point transformer, please follow [the script](ptv3_env.sh) install the following packages in the same virtual environement. You don't need to build another env for this.
 
-```
-pip install torch-sparse  # (add  `--no-build-isolation' if needed)
-pip install torch-scatter # --no-build-isolation
-pip install torch-geometric # --no-build-isolation
-pip install torch-cluster # --no-build-isolation
-cd Pointcept/ && pip install -e .
-pip install spconv-cu121 # Ensure it matches your PyTorch CUDA version.
-pip install flash-attn --no-build-isolation 
-# Build flash-attn from source if needed. For example:
-FLASH_ATTENTION_FORCE_BUILD=TRUE pip install --no-build-isolation --no-cache-dir flash-attn
-pip install gradio  # Required for the interactive demo app
-pip install einops  # Required for model components
-```
-Note that the recipe of Ptv3 installation's highly depends on your pytorch and cuda version. You need to change the version of spconv and flash-attention accordingly, or install them from source when needed.
+#### 2.4 Download our pretrained GGPT checkpoint directly [here](https://huggingface.co/YutongGoose/GGPT).
 
 ---
 
-## 🎨 Interactive Demo
-
-We provide an interactive Web UI powered by Gradio to run the pipeline sequentially (Feedforward -> SfM -> PT Refinement) and compare the 3D point clouds!
-
-```bash
-python demo_gradio.py
-```
-After starting the script, a local URL (usually `http://127.0.0.1:7860`) will be generated. Open it in your browser to try it out!
-
-
 ## 📖 Usage & Examples
 
-### 🚀 Running the Command-Line Demo
 
-You can run the reconstruction pipeline directly from the command line using `run_demo.py`. This script will process a directory of images and generate the 3D point clouds.
 
 ```bash
-# Run the demo on a custom image directory
+
 python run_demo.py image_dir=/path/to/your/images
+
 ```
 
 The outputs (including the feedforward points, SfM points, and the final GGPT points `ggpt_points.ply`) will be saved in the `outputs/demo/` directory by default.
+
+
+Or you can add ```common_config.ggpt_refine=False``` disable GGPT refinement and run SfM to only obtain the sparse reconstruction.
+
 
 ### ⚙️ Configuration Settings (SfM)
 
@@ -107,9 +76,6 @@ dlt_config:
   max_reproj_error: 4     # Reduce the reprojection error threshold to filter out noisy points
 ```
 
-### 🖼️ Running on Large Image Collections (> 50 views)
-*Coming soon!*
-
 ---
 
 ## 📊 Evaluation
@@ -124,7 +90,24 @@ Download the [preprocessed evaluation set](https://huggingface.co/datasets/Yuton
 sh benchmark_eval.sh
 ```
 
----
 
-## 🏃 Training
-*Coming soon!*
+## 🧗‍♀️ TODO
+
+* [ ] Release scripts for large-scale multi-view processing.
+
+* [ ] Release GGPT training code.
+
+* [ ] Launch interactive online demo.
+
+## 📖 Citing
+
+If you find our work useful, please cite:
+
+```bibtex
+@inproceedings{chen2026ggpt,
+  title={GGPT: Geometry-Grounded Point Transformer},
+  author={Chen, Yutong and Wang, Yiming and Zhang, Xucong and Prokudin, Sergey and Tang, Siyu},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year={2026}
+}
+```
