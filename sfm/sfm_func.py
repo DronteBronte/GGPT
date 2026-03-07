@@ -84,7 +84,7 @@ def run_sfm(images, ff_outputs, match_models, cfg, gt=None, output_dir=None):
         extrinsics = ff_outputs['extrinsics'][:,:3,:4],
         intrinsics = ba_intrinsics+0.5,
         image_size = [ff_w, ff_h],
-        camera_type = "PINHOLE",
+        camera_type = cfg.ba_config.camera_type,
         shared_camera = cfg.ba_config.shared_camera,
     )
     xyz_before_ba = torch.from_numpy(np.stack([reconstruction.points3D[i].xyz for i in sorted(reconstruction.points3D.keys())])).to(device).float()

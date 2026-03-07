@@ -65,6 +65,7 @@ You can adjust Structure-from-Motion (SfM) configuration blocks in the `.yaml` f
 ```yaml
 ba_config:
   shared_camera: True # Set it to False if images are captured with different camera intrinsics
+  camera_type: SIMPLE_PINHOLE # Set it to PINHOLE if the images can have very different fx and fy.
 
 dlt_config:
   # Adjust the filtering parameters if you need more accurate yet sparser SfM points. E.g.:

@@ -18,6 +18,7 @@ ba_config:
   shared_camera: True #! To modified if needed
   refine_focal_length: True
   calibrated: False  
+  camera_type: SIMPLE_PINHOLE # Set it to PINHOLE if the images can have very different fx and fy.
   loss_function_type: 'cauchy'
   loss_function_scale: 0.1
 

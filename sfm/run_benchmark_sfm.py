@@ -110,7 +110,7 @@ def main(cfg):
     eval_logger = EvalLogger(dirname=os.path.join(hydra.core.hydra_config.HydraConfig.get().runtime.output_dir, 'eval_logs'))
     for batch_cpu in val_dataloader:
         batch_rawres = move_to_device(batch_cpu, device)
-        batch_ffres = prepare_batch(batch_rawres, output_width=518)
+        batch_ffres = prepare_batch(batch_rawres, output_width=504 if cfg.feedforward_config.model == 'dav3' else 518)
         batch_ffres = batch_ffres[0]  #Assume batch size =1 for evaluation
         output_dir = os.path.join(hydra.core.hydra_config.HydraConfig.get().runtime.output_dir, 'save', batch_ffres['scene_name'], batch_ffres['seq_name'])
         os.makedirs(output_dir, exist_ok=True)

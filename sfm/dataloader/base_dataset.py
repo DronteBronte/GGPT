@@ -136,7 +136,7 @@ class BaseDataset(torch.utils.data.Dataset):
                 else:
                     # preserve the aspect ratio (Then every image should have the same shapes ..)
                     target_shape = np.array([round(height*self.img_size/width/14)*14, self.img_size])
-                if self.sample_extracted:
+                if self.sample_extracted and width==target_shape[1] and height==target_shape[0]:
                     processed_image, processsed_depth, processed_K = self.preprocess_2D_simple(image=image, depth=depth, K=K, target_shape=target_shape, intr_convention="opencv")
                 else:
                     processed_image, processsed_depth, processed_K = self.preprocess_2D_vggt(image=image, depth=depth, K=K, target_shape=target_shape, intr_convention="opencv")

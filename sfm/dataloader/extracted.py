@@ -8,6 +8,7 @@ class ExtractedDataset(BaseDataset):
     def __init__(self,
         **kwargs,
         ):
+        kwargs['sample_extracted'] = True
         super().__init__(**kwargs)
     
     def read_scene_pose(self, scene_name):
