@@ -9,18 +9,52 @@ import numpy as np
 
 def aggregate_chunks(ff_pts_all, ff_pts_conf_all, msks_in_scene, scene):
     _, N, H, W = msks_in_scene.shape
-    index = msks_in_scene.nonzero(as_tuple=False)  # num_chunk, n_view, H, W 
-    index = index[:,1]*W*H + index[:,2]*W + index[:,3]
-    agg_ff_pts = torch.zeros((N*H*W, 3), device=ff_pts_all.device)
-    agg_ff_pts.scatter_reduce_(dim=0,index=index.unsqueeze(-1).repeat(1,3),src=ff_pts_all,reduce='mean',include_self=False)
-    agg_ff_pts = agg_ff_pts.view(N,H,W,3)
-    agg_ff_pts_conf = torch.zeros((N*H*W), device=agg_ff_pts.device)
-    agg_ff_pts_conf.scatter_reduce_(dim=0,index=index,src=ff_pts_conf_all,reduce='mean',include_self=False)
-    agg_ff_pts_conf = agg_ff_pts_conf.view(N,H,W)
-    agg_ff_mask = agg_ff_pts_conf>0
 
-    agg_ff_pts = agg_ff_pts*agg_ff_mask.unsqueeze(-1).float() + scene['ff_pts'].to(agg_ff_pts.device)*(~agg_ff_mask).unsqueeze(-1).float()
-    return agg_ff_pts, agg_ff_pts_conf, (agg_ff_pts_conf>0)
+    # index = msks_in_scene.nonzero(as_tuple=False)  # num_chunk, n_view, H, W 
+    # index = index[:,1]*W*H + index[:,2]*W + index[:,3]
+    # agg_ff_pts = torch.zeros((N*H*W, 3), device=ff_pts_all.device)
+    # agg_ff_pts.scatter_reduce_(dim=0,index=index.unsqueeze(-1).repeat(1,3),src=ff_pts_all,reduce='mean',include_self=False)
+    # agg_ff_pts = agg_ff_pts.view(N,H,W,3)
+    # agg_ff_pts_conf = torch.zeros((N*H*W), device=agg_ff_pts.device)
+    # agg_ff_pts_conf.scatter_reduce_(dim=0,index=index,src=ff_pts_conf_all,reduce='mean',include_self=False)
+    # agg_ff_pts_conf = agg_ff_pts_conf.view(N,H,W)
+    # agg_ff_mask = agg_ff_pts_conf>0
+
+    device = ff_pts_all.device
+    num_scene_pts = N * H * W
+
+    pts_sum = torch.zeros((num_scene_pts, 3), device=device, dtype=ff_pts_all.dtype)
+    conf_sum = torch.zeros((num_scene_pts,), device=device, dtype=ff_pts_conf_all.dtype)
+    counts = torch.zeros((num_scene_pts,), device=device, dtype=ff_pts_conf_all.dtype)
+
+    start_idx = 0
+    for chunk_mask in msks_in_scene:
+        flat_index = torch.where(chunk_mask.reshape(-1))[0]
+        num_chunk_pts = flat_index.numel()
+        if num_chunk_pts == 0:
+            continue
+
+        end_idx = start_idx + num_chunk_pts
+        pts_sum.index_add_(0, flat_index, ff_pts_all[start_idx:end_idx])
+        conf_sum.index_add_(0, flat_index, ff_pts_conf_all[start_idx:end_idx])
+        counts.index_add_(0, flat_index, torch.ones(num_chunk_pts, device=device, dtype=counts.dtype))
+        start_idx = end_idx
+
+    if start_idx != ff_pts_all.shape[0]:
+        raise RuntimeError(
+            f"aggregate_chunks consumed {start_idx} points, but got {ff_pts_all.shape[0]} predictions."
+        )
+
+    agg_ff_mask = counts > 0
+    agg_ff_pts = scene['ff_pts'].to(device).reshape(num_scene_pts, 3).clone()
+    agg_ff_pts_conf = torch.zeros((num_scene_pts,), device=device, dtype=ff_pts_conf_all.dtype)
+
+    agg_ff_pts[agg_ff_mask] = pts_sum[agg_ff_mask] / counts[agg_ff_mask].unsqueeze(-1)
+    agg_ff_pts_conf[agg_ff_mask] = conf_sum[agg_ff_mask] / counts[agg_ff_mask]
+
+    agg_ff_pts = agg_ff_pts.view(N, H, W, 3)
+    agg_ff_pts_conf = agg_ff_pts_conf.view(N, H, W)
+    return agg_ff_pts, agg_ff_pts_conf, agg_ff_mask.view(N, H, W)
 
 def align_eval_points(B, A, mask, max_error=0.03):
     # Align A to B via Umeyama alignment

@@ -30,6 +30,11 @@ def init_match_model_single(model_name, device):
         elif setting == 'base':
             model.apply_setting('base')
             model.bidirectional = True
+        elif setting == 'fast':
+            model.apply_setting('fast')
+            model.bidirectional = True
+        else:
+            raise NotImplementedError(f"Setting {setting} not implemented for RoMaV2.")
     elif 'ufm' in model_name:
         from uniflowmatch.models.ufm import UniFlowMatchClassificationRefinement
         from uniflowmatch.models.ufm import UniFlowMatchConfidence
