@@ -86,6 +86,7 @@ common_config:
   save_vis: False
   save_outputs: True
   run_sfm: True
+  reduce_memory: False #delete intermediate results and models to free memory
 
 hydra:
   run: 

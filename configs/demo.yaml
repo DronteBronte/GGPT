@@ -36,8 +36,9 @@ common_config:
   num_workers: 0
   save_vis: True
   save_outputs: False
-  ggpt_ckpt: ckpts/model.step228000_cleaned.pth
+  ggpt_ckpt: ckpts/model.step228000.pth
   ggpt_refine: True
+  reduce_memory: False #delete intermediate results and models to free memory
 
 
 ggptmodel_config:

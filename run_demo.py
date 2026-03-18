@@ -35,9 +35,6 @@ def main(cfg):
     ff_model = FeedForward_Model(cfg.feedforward_config).to(device)
     Print(f"Initialized FeedForward model: {cfg.feedforward_config.model}")
     ff_model.eval()
-    match_models = init_match_models(cfg.match_config.models, device=device)
-    Print(f"Initialized Matching models: {list(match_models.keys())}")
-
     """
     Feedforward prediction
     """    
@@ -60,6 +57,9 @@ def main(cfg):
         ff_outputs = ff_model(images, preprocessed=False)
     Print("FeedForward inference done.")
 
+    if cfg.common_config.reduce_memory:
+        del ff_model
+        torch.cuda.empty_cache()
 
     output_dir = hydra.core.hydra_config.HydraConfig.get().runtime.output_dir
     save_xyzrgb_to_ply(points=ff_outputs['points'], rgb=ff_outputs['images_ff'], filename=os.path.join(output_dir, 'ff_points.ply'))
@@ -71,6 +71,9 @@ def main(cfg):
     SfM 
     Dense Matching + Sparse BA + Direct linear Triangulation
     """
+    match_models = init_match_models(cfg.match_config.models, device=device)
+    Print(f"Initialized Matching models: {list(match_models.keys())}")
+
     sfm_outputs = run_sfm(images, ff_outputs, match_models, cfg)
 
     if sfm_outputs['points_success']:
@@ -81,7 +84,10 @@ def main(cfg):
     else:
         Print("SfM failed.")
 
-    del ff_model, match_models 
+    if cfg.common_config.reduce_memory:
+        del match_models 
+    else:
+        del ff_model, match_models 
     torch.cuda.empty_cache()
 
     ggpt_model = instantiate(cfg.ggptmodel_config).eval()

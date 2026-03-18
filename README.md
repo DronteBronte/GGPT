@@ -40,7 +40,7 @@ cd RoMa/ && pip install -e .
 
 #### d. \[Optional\] If you need to run GGPT, the 3D point transformer, please follow [the script](ptv3_env.sh) install the following packages in the same virtual environement. You don't need to build another env for this.
 
-#### e. Download our pretrained GGPT checkpoint directly [here](https://huggingface.co/YutongGoose/GGPT).
+#### e. Download our pretrained GGPT checkpoint directly [here](https://huggingface.co/YutongGoose/GGPT) and place it in [ckpts/].
 
 ---
 

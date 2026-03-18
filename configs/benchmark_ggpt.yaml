@@ -4,6 +4,7 @@ common_config:
   ddp: True
   save_vis: False
   load_ckpt: ckpts/model.step228000.pth
+  reduce_memory: False #delete intermediate results and models to free memory
 hydra:
   run: 
     dir: outputs/benchmark/ggpt_vggt-point-romav2-base
