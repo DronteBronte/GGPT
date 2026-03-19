@@ -154,8 +154,14 @@ python -m torch.distributed.run --nnodes=1 --nproc_per_node=1 \
     valdataset_configs.data_dict.custom_eval_set=outputs/custom_eval/sfm_vggt-point_romav2/save/custom_eval_set \
     hydra.run.dir=outputs/custom_eval/ggpt_vggt-point_romav2
 ```
+## 💡 Limitations
 
+While our work demonstrates that geometry optimization provides meaningful constraints that significantly improve feed-forward 3D reconstruction, our current method can still fail under specific conditions. For an in-depth discussion, please refer to the limitations section in our paper's appendix.
 
+* **Ill-posed Geometry:**  extremely low overlap or parallax (distant tree in outdoor scenes), in-the-wild photos captured under significantly different lightings, ambiguous and misleading symmetric structures, and dynamic scenes.
+* **GGPT Refinement:** GGPT currently faces challenges with long-range extrapolation in monocular regions and can occasionally produce patchify artifacts in large-scale scenes.
+
+We invite you to share failure cases via GitHub Issues to help guide future research!
 
 
 
