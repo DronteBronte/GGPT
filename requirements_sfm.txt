@@ -4,7 +4,7 @@ einops
 safetensors
 opencv-python
 pycolmap==3.12.0
-lightglue
+git+https://github.com/cvg/LightGlue.git
 hydra-core
 h5py
 pyyaml
