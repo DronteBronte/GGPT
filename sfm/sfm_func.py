@@ -81,11 +81,12 @@ def run_sfm(images, ff_outputs, match_models, cfg, gt=None, output_dir=None):
 
     calibrated = cfg.ba_config.get('calibrated', False)
     ba_intrinsics = gt['intrinsics'][:,:3,:3].to(device).float() if calibrated else ff_outputs['intrinsics'][:,:3,:3]
+    ba_intrinsics[:,:2,2] += 0.5
     reconstruction = batch_torch_matrix_to_pycolmap(
         points3d = pts3d_ba,
         tracks = tracks_ba+0.5, masks = tracks_mask_ba,
         extrinsics = ff_outputs['extrinsics'][:,:3,:4],
-        intrinsics = ba_intrinsics+0.5,
+        intrinsics = ba_intrinsics,
         image_size = [ff_w, ff_h],
         camera_type = cfg.ba_config.camera_type,
         shared_camera = cfg.ba_config.shared_camera,
