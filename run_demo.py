@@ -78,7 +78,12 @@ def main(cfg):
             images.append(img)
     images = torch.from_numpy(np.stack(images, axis=0)).float()/255.0
     # reshape it to H/W divisible by 14
+
     H, W = images.shape[1], images.shape[2]
+    if H > W:
+        #simply rotate it 
+        images = images.permute(0,2,1,3)
+        H, W = W, H
     if W > cfg.match_config.max_width:
         H = int(round(H*cfg.match_config.max_width/W))
         W = cfg.match_config.max_width

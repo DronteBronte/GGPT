@@ -92,6 +92,12 @@ python run_demo.py \
 
 Note on Scalability: The current pipeline performs exhaustive matching, which leads to longer runtimes for large-scale or dense view reconstructions. For better efficiency in these scenarios, we recommend integrating sparse graph building.
 
+### Trouble shooting.
+
+* If you run into this issue when running RoMaV2 `raise RuntimeError("Float32 matmul precision must be set to highest")`,  manually add `torch.set_float32_matmul_precision("highest")` before the warning line.
+
+* If you run into this issue when running DLT triangulation `torch._C._LinAlgError: cusolver error: CUSOLVER_STATUS_INVALID_VALUE`, reduce `dlt_config.batch_size` to a smaller value, e.g. 50000. This is [a torch-version-specific issue](https://github.com/pytorch/pytorch/issues/166004).
+
 ---
 
 ## 3. 📊 Evaluation
