@@ -20,7 +20,7 @@ def init_match_model_single(model_name, device):
         model = roma_outdoor(device=device,coarse_res=560,symmetric=True).to(device).eval()
     elif 'romav2' in model_name:
         from romav2 import RoMaV2
-        model = RoMaV2().eval().to(device)
+        model = RoMaV2(device=device).eval()
         setting = model_name.split('-')[-1]
         if setting == 'precise':
             pass
