@@ -12,24 +12,23 @@ match_config:
   save_vis: False
 
 ba_config:
-  score_thresh: 0.6
-  cycle_err_thresh: 2
+  score_thresh: 0.7
+  cycle_err_thresh: 1
   mintrack_per_view: 2048
-  shared_camera: True #! To modified if needed
+  shared_camera: False #! To modified if needed
   refine_focal_length: True
   calibrated: False  
-  camera_type: SIMPLE_PINHOLE # Set it to PINHOLE if the images can have very different fx and fy.
+  camera_type: PINHOLE # Set it to PINHOLE if the images can have very different fx and fy.
   loss_function_type: 'cauchy'
   loss_function_scale: 0.1
 
-
 dlt_config:
-  score_thresh: 0.4
-  cycle_err_thresh: 2
-  max_epipolar_error: 2
-  min_tri_angle: 5
-  max_reproj_error: 2
-  batch_size: 100000
+  score_thresh: 0.7
+  cycle_err_thresh: 1.5
+  max_epipolar_error: 1
+  min_tri_angle: 10
+  max_reproj_error: 1
+  batch_size: 20000
 
 common_config:
   seed: 47
