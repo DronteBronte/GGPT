@@ -1,12 +1,15 @@
 [submodule "vggt"]
-	path = vggt
-	url = https://github.com/facebookresearch/vggt.git
+    path = vggt
+    url = https://github.com/facebookresearch/vggt.git
+
 [submodule "RoMaV2"]
-	path = RoMaV2
-	url = git@github.com:ChenYutongTHU/RoMaV2.git
+    path = RoMaV2
+    url = https://github.com/ChenYutongTHU/RoMaV2.git
+
 [submodule "Pointcept"]
-	path = Pointcept
-	url = git@github.com:ChenYutongTHU/Pointcept.git
+    path = Pointcept
+    url = https://github.com/ChenYutongTHU/Pointcept.git
+
 [submodule "RoMa"]
-	path = RoMa
-	url = git@github.com:Parskatt/RoMa.git
+    path = RoMa
+    url = https://github.com/Parskatt/RoMa.git
